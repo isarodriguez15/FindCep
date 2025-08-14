@@ -12,13 +12,17 @@ export default function Index() {
   const [cep, setCep] = useState("");
   const [jsonCep, setJsonCep] = useState({});
 
-  async function consultarCep() {
+  const [aparecidinho, setAparecidinho] = useState(false);
+
+  async function consultarCep(e) {
+    e.preventDefault();
     try {
       if (cep !== "" && cep.length === 8) {
         const resposta = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
 
         setJsonCep(resposta.data);
         // console.log(jsonCep.logradouro);
+        setAparecidinho(true);
       } else {
         alert("o cep está incorreto. Digite com 8 números!");
       }
@@ -50,13 +54,16 @@ export default function Index() {
           {/* 2.3. Botão */}
           <Botao tituloBotao='Consultar' onPress={consultarCep} />
           {/* 2.3. Card de informações*/}
+          {aparecidinho && 
           <Card
             cep={jsonCep.cep}
             logradouro={ jsonCep.logradouro}
             bairro={jsonCep.bairro }
             uf={jsonCep.uf }
             estado={ jsonCep.estado}
-            região={jsonCep.região }/>
+            região={jsonCep.região }
+            />
+          }
         </View>
       </ScrollView>
 
@@ -94,6 +101,8 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
   titulo: {
-    fontSize: 25
+    fontSize: 25,
+    fontFamily: "Poppins-Bold",
+    color: "#000000"
   }
 })
